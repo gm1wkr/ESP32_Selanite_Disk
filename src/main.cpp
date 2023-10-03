@@ -54,7 +54,9 @@ DEFINE_GRADIENT_PALETTE(pFire){
 };
 
 void nextPattern();
+void nightLightCool();
 void nightLightFire();
+
 
 void setup() {
     FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
@@ -84,7 +86,7 @@ void nextPattern() {
   currentPattern = (currentPattern + 1) % NUM_PATTERNS;
 }
 
-void nightLight()
+void nightLightCool()
 {
     CRGBPalette16 ice = pBlueIce;
     uint8_t brightness = beatsin16(2, 92, 128, 0, 0);
@@ -94,10 +96,6 @@ void nightLight()
     }
 
     fill_palette(leds, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, ice, brightness, LINEARBLEND);
-
-    // EVERY_N_MILLISECONDS(60){
-    //     fadeToBlackBy(leds, NUM_LEDS, 64);
-    // }
 
     EVERY_N_MILLISECONDS(200) {
         paletteIndex++;
