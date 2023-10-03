@@ -11,6 +11,8 @@
  * ----------------------------------------------------------------------------|
  * History
  * 03 Oct 2023  wkr     Project Start.  Scaffolding.
+ * 03 Oct 2023  wkr     Library OneButton Added.
+ *                      Manages hardware buttons and switches.
  * ----------------------------------------------------------------------------|
 */
 
