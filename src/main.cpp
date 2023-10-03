@@ -42,6 +42,16 @@ DEFINE_GRADIENT_PALETTE(pBlueIce){
     255, 90, 92, 128
 };
 
+DEFINE_GRADIENT_PALETTE(pFire){
+    0, 230, 60, 0,
+    16, 255, 0, 0,
+    48, 255, 70, 0,
+    76, 255, 180, 0,
+    128, 255, 60, 0,
+    196, 122, 0, 0,
+    220, 186, 64 , 0,
+    255, 255, 20, 0,
+};
 
 void nextPattern();
 void nightLight();
