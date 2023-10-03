@@ -9,6 +9,9 @@
  *              from VBUS. 
  *
  * ----------------------------------------------------------------------------|
+ * History
+ * 03 Oct 2023  wkr     Project Start.  Scaffolding.
+ * ----------------------------------------------------------------------------|
 */
 
 #include<Arduino.h>
@@ -17,13 +20,13 @@
 #include <OneButton.h>
 
 #define LED_PIN     14
-#define NUM_LEDS    5
+#define NUM_LEDS     5
 
-#define PATTERN_BUTTON_PIN 12
-#define NUM_PATTERNS 2
+#define PATTERN_BUTTON_PIN  12
+#define NUM_PATTERNS         2
 
-#define COLOR_ORDER         GRB
-#define BRIGHTNESS          160
+#define COLOR_ORDER    GRB
+#define BRIGHTNESS     160
 
 CRGB    leds[NUM_LEDS];
 
