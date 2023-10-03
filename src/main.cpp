@@ -54,7 +54,7 @@ DEFINE_GRADIENT_PALETTE(pFire){
 };
 
 void nextPattern();
-void nightLight();
+void nightLightFire();
 
 void setup() {
     FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
@@ -63,9 +63,21 @@ void setup() {
 }
 
 void loop() {
+    
+    switch(currentPattern)
+    {
+        case 0:
+            nightLightCool();
+            break;
+
+        case 1:
+            nightLightFire();
+            break;
     }
 
-    
+    FastLED.show();
+
+    btn.tick();
 }
 
 void nextPattern() {
@@ -90,6 +102,21 @@ void nightLight()
     EVERY_N_MILLISECONDS(200) {
         paletteIndex++;
     }
-
-    FastLED.show();
 }
+
+void nightLightFire()
+{
+    CRGBPalette16 fire = pFire;
+    uint8_t brightness = beatsin8(1, 64, 92, 0, 0);
+
+    for (uint8_t i = NUM_LEDS -1; i < 0; i--) {
+        leds[i] = ColorFromPalette(fire, colourIndex[i]);
+    }
+
+    fill_palette(leds, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, fire, brightness, LINEARBLEND);
+
+    EVERY_N_MILLISECONDS(120) {
+        paletteIndex++;
+    }
+}
+
