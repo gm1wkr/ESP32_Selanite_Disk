@@ -4,7 +4,7 @@
  * ----------------------------------------------------------------------------|
  * Target:      Espressif ESP32 Dev Kit C
  *
- * GPIO 12 In   SP momentary switch to change displayed pattern.
+ * GPIO 12 In   SP momentary switch to change displayed effect.
  * GPIO 14 Out  5px WS2812B strip as an uplight for crystal.  Currently powered
  *              from VBUS. 
  *
@@ -19,14 +19,14 @@
 #include<FastLED.h>
 #include <OneButton.h>
 
-#define LED_PIN     14
-#define NUM_LEDS     5
+#define COLOR_ORDER    GRB
+#define BRIGHTNESS     160
+#define LED_PIN         14
+#define NUM_LEDS         5
 
 #define PATTERN_BUTTON_PIN  12
 #define NUM_PATTERNS         2
 
-#define COLOR_ORDER    GRB
-#define BRIGHTNESS     160
 
 CRGB    leds[NUM_LEDS];
 
@@ -60,7 +60,6 @@ void nextPattern();
 void nightLightCool();
 void nightLightFire();
 
-
 void setup() {
     FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
     FastLED.setBrightness(BRIGHTNESS);
@@ -68,7 +67,6 @@ void setup() {
 }
 
 void loop() {
-    
     switch(currentPattern)
     {
         case 0:
@@ -120,4 +118,3 @@ void nightLightFire()
         paletteIndex++;
     }
 }
-
