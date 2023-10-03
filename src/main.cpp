@@ -27,7 +27,7 @@
 
 CRGB    leds[NUM_LEDS];
 
-uint8_t patternCounter = 0;
+uint8_t currentPattern = 0;
 OneButton btn = OneButton(PATTERN_BUTTON_PIN, true, true);
 
 uint8_t paletteIndex = 0;
@@ -49,16 +49,17 @@ void nightLight();
 void setup() {
     FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
     FastLED.setBrightness(BRIGHTNESS);
+    btn.attachClick(nextPattern);
 }
 
 void loop() {
-    nightLight();
+    }
 
     
 }
 
 void nextPattern() {
-  patternCounter = (patternCounter + 1) % NUM_PATTERNS;
+  currentPattern = (currentPattern + 1) % NUM_PATTERNS;
 }
 
 void nightLight()
