@@ -67,8 +67,9 @@ DEFINE_GRADIENT_PALETTE(pFire){
 };
 
 void nextPattern();
-void nightLightCool();
-void nightLightFire();
+void runPattern(uint8_t pattern, CRGB *LEDArray);
+void nightLightCool(CRGB *LEDArray);
+void nightLightWarm(CRGB *LEDArray);
 
 void setup() {
     FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
