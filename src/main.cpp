@@ -30,7 +30,7 @@
 #define NUM_LEDS         5
 
 #define PATTERN_BUTTON_PIN  12
-#define NUM_PATTERNS         2
+#define NUM_PATTERNS         4
 
 
 CRGB    source1[NUM_LEDS];
@@ -48,6 +48,8 @@ OneButton btn = OneButton(PATTERN_BUTTON_PIN, true, true);
 
 uint8_t paletteIndex = 0;
 uint8_t colourIndex[NUM_LEDS];
+
+CRGBPalette16 firePalette = HeatColors_p;
 
 DEFINE_GRADIENT_PALETTE(pBlueIce){
     0, 90, 92, 128,
@@ -73,6 +75,8 @@ void nextPattern();
 void runPattern(uint8_t pattern, CRGB *LEDArray);
 void nightLightCool(CRGB *LEDArray);
 void nightLightWarm(CRGB *LEDArray);
+void fireEffect(CRGB *LEDArray);
+void embersEffect(CRGB *LEDArray);
 
 void setup() {
     FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(output, NUM_LEDS).setCorrection(TypicalLEDStrip);
@@ -130,6 +134,14 @@ void runPattern(uint8_t pattern, CRGB *LEDArray)
             case 1:
                 nightLightWarm(LEDArray);
                 break;
+
+            case 2:
+                fireEffect(LEDArray);
+                break;
+
+            case 3:
+                embersEffect(LEDArray);
+                break;
         }
 }
 
@@ -162,5 +174,34 @@ void nightLightWarm(CRGB *LEDArray)
 
     EVERY_N_MILLISECONDS(120) {
         paletteIndex++;
+    }
+}
+
+void fireEffect(CRGB *LEDArray)
+{
+    int clock = millis();
+
+    for (int i = 0; i < NUM_LEDS; i++) {
+        uint8_t noise = inoise8(0, i * 92 + clock, clock / 3);
+        uint8_t math = abs8((i - (NUM_LEDS-1)) * 255 / (NUM_LEDS-1) - 32);
+        uint8_t index = qsub8 (noise, math);
+        LEDArray[i] = ColorFromPalette (firePalette, index, 255);
+    }
+}
+
+void embersEffect(CRGB *LEDArray)
+{
+    CRGBPalette16 fire  = pFire;
+    int clock           = millis();
+    uint8_t brightness1  = beatsin8(1, 64, 128, 0, 0);
+    uint8_t brightness2  = beatsin8(12, 64, 92, 0, 0);
+    uint8_t brightness3  = beatsin8(120, 92, 148, 0, 0);
+    uint8_t brightness   = (brightness1 + brightness2 + brightness3) / 3;
+
+    for (int i = 0; i < NUM_LEDS; i++) {
+        uint8_t noise = inoise8(0, i * 32 + clock, clock / 2);
+        uint8_t math = abs8((i - (NUM_LEDS-1)) * 255 / (NUM_LEDS-1) - 32);
+        uint8_t index = qsub8 (noise, math);
+        LEDArray[i] = ColorFromPalette (fire, index, brightness);
     }
 }
