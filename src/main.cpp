@@ -88,13 +88,22 @@ void loop() {
             nightLightCool();
             break;
 
-        case 1:
-            nightLightFire();
-            break;
+    EVERY_N_MILLISECONDS(20) {
+        blend(source1, source2, output, NUM_LEDS, blendAmount);
+
+        if(useSource1) {
+            if (blendAmount < 255) blendAmount++;
+        } else {
+            if (blendAmount > 0) blendAmount--;
+        }
     }
+
 
     Serial.print("Current Effect: ");
     Serial.println(currentPattern);
+
+    runPattern(sourcePattern1, source1);
+    runPattern(sourcePattern2, source2);
 
     FastLED.show();
 
