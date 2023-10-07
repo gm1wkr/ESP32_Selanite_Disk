@@ -16,6 +16,8 @@
  * 07 Oct 2023  wkr     Add HW momentary switch
  *                      Add Effect changer functionality.
  *                      Add Crossfade on effect change functionality.
+ *                      Add effects: fire, embers, coals and
+ *                      juicyPlum.
  * ----------------------------------------------------------------------------|
 */
 
@@ -30,7 +32,7 @@
 #define NUM_LEDS         5
 
 #define PATTERN_BUTTON_PIN  12
-#define NUM_PATTERNS         4
+#define NUM_PATTERNS         6
 
 
 CRGB    source1[NUM_LEDS];
@@ -71,12 +73,23 @@ DEFINE_GRADIENT_PALETTE(pFire){
     255, 255, 20, 0,
 };
 
+DEFINE_GRADIENT_PALETTE(pPlum){
+    0, 209, 0, 209,
+    48, 255, 16, 209,
+    64, 192, 32, 255,
+    128, 255, 16, 209,
+    192, 255, 0, 230,
+    255, 209, 0, 209,
+};
+
 void nextPattern();
 void runPattern(uint8_t pattern, CRGB *LEDArray);
 void nightLightCool(CRGB *LEDArray);
 void nightLightWarm(CRGB *LEDArray);
 void fireEffect(CRGB *LEDArray);
 void embersEffect(CRGB *LEDArray);
+void coalsEffect(CRGB *LEDArray);
+void juicyPlumEffect(CRGB *LEDArray);
 
 void setup() {
     FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(output, NUM_LEDS).setCorrection(TypicalLEDStrip);
@@ -99,8 +112,8 @@ void loop() {
     }
 
 
-    Serial.print("Current Effect: ");
-    Serial.println(currentPattern);
+    // Serial.print("Current Effect: ");
+    // Serial.println(currentPattern);
 
     runPattern(sourcePattern1, source1);
     runPattern(sourcePattern2, source2);
@@ -141,6 +154,14 @@ void runPattern(uint8_t pattern, CRGB *LEDArray)
 
             case 3:
                 embersEffect(LEDArray);
+                break;
+
+            case 4:
+                coalsEffect(LEDArray);
+                break;
+
+            case 5:
+                juicyPlumEffect(LEDArray);
                 break;
         }
 }
@@ -204,4 +225,40 @@ void embersEffect(CRGB *LEDArray)
         uint8_t index = qsub8 (noise, math);
         LEDArray[i] = ColorFromPalette (fire, index, brightness);
     }
+}
+
+void coalsEffect(CRGB *LEDArray)
+{
+    CRGBPalette16 fire  = pFire;
+    int clock           = millis();
+    uint8_t brightness1  = beatsin8(1, 32, 64, 0, 0);
+    uint8_t brightness2  = beatsin8(4, 64, 92, 0, 128);
+    uint8_t brightness3  = beatsin8(6, 16, 128, 0, 64);
+    uint8_t brightness   = (brightness1 + brightness2 + brightness3) / 3;
+
+    for (int i = 0; i < NUM_LEDS; i++) {
+        uint8_t noise = inoise8(0, i * 32 + clock, clock / 2);
+        uint8_t math = abs8((i - (NUM_LEDS-1)) * 255 / (NUM_LEDS-1) - 32);
+        uint8_t index = qsub8 (noise, math);
+        LEDArray[i] = ColorFromPalette (fire, index, brightness);
+    }
+}
+
+void juicyPlumEffect(CRGB *LEDArray)
+{
+    CRGBPalette16 plum = pPlum;
+
+    uint8_t brightness  = beatsin8(6, 64, 72, 0, 0);
+
+    for (uint8_t i = NUM_LEDS -1; i < 0; i--) {
+        LEDArray[i] = ColorFromPalette(plum, colourIndex[i]);
+    }
+
+    fill_palette(LEDArray, NUM_LEDS, 0, 1, plum, brightness, LINEARBLEND);
+
+    // EVERY_N_MILLISECONDS(120) {
+    //     paletteIndex++;
+    // }
+    Serial.print("P Index: ");
+    Serial.println(paletteIndex);
 }
