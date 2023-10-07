@@ -49,9 +49,9 @@ DEFINE_GRADIENT_PALETTE(pBlueIce){
 
 DEFINE_GRADIENT_PALETTE(pFire){
     0, 230, 60, 0,
-    16, 255, 0, 0,
-    48, 255, 70, 0,
-    76, 255, 180, 0,
+    16, 255, 0, 20,
+    48, 255, 70,50,
+    76, 255, 180, 20,
     128, 255, 60, 0,
     196, 122, 0, 0,
     220, 186, 64 , 0,
@@ -67,11 +67,12 @@ void setup() {
     FastLED.setBrightness(BRIGHTNESS);
     Serial.begin(115200);
     btn.attachClick(nextPattern);
+    Serial.println("END setup()");
 }
 
 void loop() {
     // Serial.println("Start loop");
-    currentPattern = 0;
+    // currentPattern = 0;
     switch(currentPattern)
     {
         case 0:
@@ -83,7 +84,8 @@ void loop() {
             break;
     }
 
-
+    Serial.print("Current Effect: ");
+    Serial.println(currentPattern);
 
     FastLED.show();
 
