@@ -31,6 +31,9 @@
 
 
 CRGB    leds[NUM_LEDS];
+CRGB    source1[NUM_LEDS];
+CRGB    source2[NUM_LEDS];
+CRGB    output[NUM_LEDS];
 
 uint8_t currentPattern = 0;
 OneButton btn = OneButton(PATTERN_BUTTON_PIN, true, true);
