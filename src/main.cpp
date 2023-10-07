@@ -30,10 +30,10 @@
 #define NUM_PATTERNS         2
 
 
-CRGB    leds[NUM_LEDS];
 CRGB    source1[NUM_LEDS];
 CRGB    source2[NUM_LEDS];
 CRGB    output[NUM_LEDS];
+
 uint8_t blendAmount     = 0;
 uint8_t patternCounter  = 0;
 uint8_t sourcePattern1  = 0;
@@ -80,13 +80,6 @@ void setup() {
 }
 
 void loop() {
-    // Serial.println("Start loop");
-    // currentPattern = 0;
-    switch(currentPattern)
-    {
-        case 0:
-            nightLightCool();
-            break;
 
     EVERY_N_MILLISECONDS(20) {
         blend(source1, source2, output, NUM_LEDS, blendAmount);
@@ -122,6 +115,7 @@ void nextPattern() {
 
     useSource1 = !useSource1;
 }
+
 void runPattern(uint8_t pattern, CRGB *LEDArray)
 {
         switch(pattern)
