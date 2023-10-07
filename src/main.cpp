@@ -152,16 +152,16 @@ void nightLightCool(CRGB *LEDArray)
     }
 }
 
-void nightLightFire()
+void nightLightWarm(CRGB *LEDArray)
 {
     CRGBPalette16 fire = pFire;
     uint8_t brightness = beatsin8(1, 64, 92, 0, 0);
 
     for (uint8_t i = NUM_LEDS -1; i < 0; i--) {
-        leds[i] = ColorFromPalette(fire, colourIndex[i]);
+        LEDArray[i] = ColorFromPalette(fire, colourIndex[i]);
     }
 
-    fill_palette(leds, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, fire, brightness, LINEARBLEND);
+    fill_palette(LEDArray, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, fire, brightness, LINEARBLEND);
 
     EVERY_N_MILLISECONDS(120) {
         paletteIndex++;
