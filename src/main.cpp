@@ -34,6 +34,11 @@ CRGB    leds[NUM_LEDS];
 CRGB    source1[NUM_LEDS];
 CRGB    source2[NUM_LEDS];
 CRGB    output[NUM_LEDS];
+uint8_t blendAmount     = 0;
+uint8_t patternCounter  = 0;
+uint8_t sourcePattern1  = 0;
+uint8_t sourcePattern2  = 1;
+bool    useSource1      = false;
 
 uint8_t currentPattern = 0;
 OneButton btn = OneButton(PATTERN_BUTTON_PIN, true, true);
