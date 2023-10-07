@@ -13,6 +13,9 @@
  * 03 Oct 2023  wkr     Project Start.  Scaffolding.
  * 03 Oct 2023  wkr     Library OneButton Added.
  *                      Manages hardware buttons and switches.
+ * 07 Oct 2023  wkr     Add HW momentary switch
+ *                      Add Effect changer functionality.
+ *                      Add Crossfade on effect change functionality.
  * ----------------------------------------------------------------------------|
 */
 
@@ -30,7 +33,15 @@
 #define NUM_PATTERNS         2
 
 
-CRGB    leds[NUM_LEDS];
+CRGB    source1[NUM_LEDS];
+CRGB    source2[NUM_LEDS];
+CRGB    output[NUM_LEDS];
+
+uint8_t blendAmount     = 0;
+uint8_t patternCounter  = 0;
+uint8_t sourcePattern1  = 0;
+uint8_t sourcePattern2  = 1;
+bool    useSource1      = false;
 
 uint8_t currentPattern = 0;
 OneButton btn = OneButton(PATTERN_BUTTON_PIN, true, true);
@@ -59,11 +70,12 @@ DEFINE_GRADIENT_PALETTE(pFire){
 };
 
 void nextPattern();
-void nightLightCool();
-void nightLightFire();
+void runPattern(uint8_t pattern, CRGB *LEDArray);
+void nightLightCool(CRGB *LEDArray);
+void nightLightWarm(CRGB *LEDArray);
 
 void setup() {
-    FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
+    FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(output, NUM_LEDS).setCorrection(TypicalLEDStrip);
     FastLED.setBrightness(BRIGHTNESS);
     Serial.begin(115200);
     btn.attachClick(nextPattern);
@@ -71,21 +83,23 @@ void setup() {
 }
 
 void loop() {
-    // Serial.println("Start loop");
-    // currentPattern = 0;
-    switch(currentPattern)
-    {
-        case 0:
-            nightLightCool();
-            break;
 
-        case 1:
-            nightLightFire();
-            break;
+    EVERY_N_MILLISECONDS(20) {
+        blend(source1, source2, output, NUM_LEDS, blendAmount);
+
+        if(useSource1) {
+            if (blendAmount < 255) blendAmount++;
+        } else {
+            if (blendAmount > 0) blendAmount--;
+        }
     }
+
 
     Serial.print("Current Effect: ");
     Serial.println(currentPattern);
+
+    runPattern(sourcePattern1, source1);
+    runPattern(sourcePattern2, source2);
 
     FastLED.show();
 
@@ -95,34 +109,56 @@ void loop() {
 
 void nextPattern() {
   currentPattern = (currentPattern + 1) % NUM_PATTERNS;
+
+    if(useSource1) {
+        sourcePattern1 = currentPattern;
+    } else {
+        sourcePattern2 = currentPattern;
+    }
+
+    useSource1 = !useSource1;
 }
 
-void nightLightCool()
+void runPattern(uint8_t pattern, CRGB *LEDArray)
+{
+        switch(pattern)
+        {
+            case 0:
+                nightLightCool(LEDArray);
+                break;
+
+            case 1:
+                nightLightWarm(LEDArray);
+                break;
+        }
+}
+
+void nightLightCool(CRGB *LEDArray)
 {
     CRGBPalette16 ice = pBlueIce;
     uint8_t brightness = beatsin16(2, 92, 128, 0, 0);
 
     for(uint8_t i = NUM_LEDS - 1; i < 0; i--){
-        leds[i] = ColorFromPalette(ice, colourIndex[i]);
+        LEDArray[i] = ColorFromPalette(ice, colourIndex[i]);
     }
 
-    fill_palette(leds, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, ice, brightness, LINEARBLEND);
+    fill_palette(LEDArray, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, ice, brightness, LINEARBLEND);
 
     EVERY_N_MILLISECONDS(200) {
         paletteIndex++;
     }
 }
 
-void nightLightFire()
+void nightLightWarm(CRGB *LEDArray)
 {
     CRGBPalette16 fire = pFire;
     uint8_t brightness = beatsin8(1, 64, 92, 0, 0);
 
     for (uint8_t i = NUM_LEDS -1; i < 0; i--) {
-        leds[i] = ColorFromPalette(fire, colourIndex[i]);
+        LEDArray[i] = ColorFromPalette(fire, colourIndex[i]);
     }
 
-    fill_palette(leds, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, fire, brightness, LINEARBLEND);
+    fill_palette(LEDArray, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, fire, brightness, LINEARBLEND);
 
     EVERY_N_MILLISECONDS(120) {
         paletteIndex++;
