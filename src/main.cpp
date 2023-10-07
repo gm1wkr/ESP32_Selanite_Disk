@@ -113,6 +113,15 @@ void loop() {
 
 void nextPattern() {
   currentPattern = (currentPattern + 1) % NUM_PATTERNS;
+
+    if(useSource1) {
+        sourcePattern1 = currentPattern;
+    } else {
+        sourcePattern2 = currentPattern;
+    }
+
+    useSource1 = !useSource1;
+}
 void runPattern(uint8_t pattern, CRGB *LEDArray)
 {
         switch(pattern)
