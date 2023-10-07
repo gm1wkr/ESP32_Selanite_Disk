@@ -17,7 +17,8 @@
  *                      Add Effect changer functionality.
  *                      Add Crossfade on effect change functionality.
  *                      Add effects: fire, embers, coals and
- *                      juicyPlum.
+ *                      -juicyPlum.
+ *                      Rename symbols (compiled, not tested on HW)
  * ----------------------------------------------------------------------------|
 */
 
