@@ -104,6 +104,18 @@ void loop() {
 
 void nextPattern() {
   currentPattern = (currentPattern + 1) % NUM_PATTERNS;
+void runPattern(uint8_t pattern, CRGB *LEDArray)
+{
+        switch(pattern)
+        {
+            case 0:
+                nightLightCool(LEDArray);
+                break;
+
+            case 1:
+                nightLightWarm(LEDArray);
+                break;
+        }
 }
 
 void nightLightCool()
