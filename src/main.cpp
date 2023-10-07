@@ -72,7 +72,7 @@ void nightLightCool(CRGB *LEDArray);
 void nightLightWarm(CRGB *LEDArray);
 
 void setup() {
-    FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
+    FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(output, NUM_LEDS).setCorrection(TypicalLEDStrip);
     FastLED.setBrightness(BRIGHTNESS);
     Serial.begin(115200);
     btn.attachClick(nextPattern);
