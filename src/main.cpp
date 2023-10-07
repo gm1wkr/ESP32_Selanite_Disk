@@ -136,16 +136,16 @@ void runPattern(uint8_t pattern, CRGB *LEDArray)
         }
 }
 
-void nightLightCool()
+void nightLightCool(CRGB *LEDArray)
 {
     CRGBPalette16 ice = pBlueIce;
     uint8_t brightness = beatsin16(2, 92, 128, 0, 0);
 
     for(uint8_t i = NUM_LEDS - 1; i < 0; i--){
-        leds[i] = ColorFromPalette(ice, colourIndex[i]);
+        LEDArray[i] = ColorFromPalette(ice, colourIndex[i]);
     }
 
-    fill_palette(leds, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, ice, brightness, LINEARBLEND);
+    fill_palette(LEDArray, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, ice, brightness, LINEARBLEND);
 
     EVERY_N_MILLISECONDS(200) {
         paletteIndex++;
