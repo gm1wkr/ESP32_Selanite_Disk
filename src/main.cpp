@@ -65,10 +65,13 @@ void nightLightFire();
 void setup() {
     FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
     FastLED.setBrightness(BRIGHTNESS);
+    Serial.begin(115200);
     btn.attachClick(nextPattern);
 }
 
 void loop() {
+    // Serial.println("Start loop");
+    currentPattern = 0;
     switch(currentPattern)
     {
         case 0:
@@ -80,9 +83,12 @@ void loop() {
             break;
     }
 
+
+
     FastLED.show();
 
     btn.tick();
+    // Serial.println("End loop");
 }
 
 void nextPattern() {
