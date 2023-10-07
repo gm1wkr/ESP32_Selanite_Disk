@@ -35,17 +35,16 @@
 #define NUM_PATTERNS         6
 
 
-CRGB    source1[NUM_LEDS];
-CRGB    source2[NUM_LEDS];
-CRGB    output[NUM_LEDS];
+CRGB    bufSource1[NUM_LEDS];
+CRGB    bufSource2[NUM_LEDS];
+CRGB    bufOut[NUM_LEDS];
 
-uint8_t blendAmount     = 0;
-uint8_t patternCounter  = 0;
-uint8_t sourcePattern1  = 0;
-uint8_t sourcePattern2  = 1;
-bool    useSource1      = false;
+uint8_t blendAmount         = 0;
+uint8_t sourceEffect1       = 0;
+uint8_t sourceEffect2       = 1;
+bool    useSourceEffect1    = false;
 
-uint8_t currentPattern = 0;
+uint8_t currentEffect = 0;
 OneButton btn = OneButton(PATTERN_BUTTON_PIN, true, true);
 
 uint8_t paletteIndex = 0;
@@ -82,8 +81,8 @@ DEFINE_GRADIENT_PALETTE(pPlum){
     255, 209, 0, 209,
 };
 
-void nextPattern();
-void runPattern(uint8_t pattern, CRGB *LEDArray);
+void nextEffect();
+void runEffect(uint8_t pattern, CRGB *LEDArray);
 void nightLightCool(CRGB *LEDArray);
 void nightLightWarm(CRGB *LEDArray);
 void fireEffect(CRGB *LEDArray);
@@ -92,19 +91,19 @@ void coalsEffect(CRGB *LEDArray);
 void juicyPlumEffect(CRGB *LEDArray);
 
 void setup() {
-    FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(output, NUM_LEDS).setCorrection(TypicalLEDStrip);
+    FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(bufOut, NUM_LEDS).setCorrection(TypicalLEDStrip);
     FastLED.setBrightness(BRIGHTNESS);
     Serial.begin(115200);
-    btn.attachClick(nextPattern);
+    btn.attachClick(nextEffect);
     Serial.println("END setup()");
 }
 
 void loop() {
 
     EVERY_N_MILLISECONDS(20) {
-        blend(source1, source2, output, NUM_LEDS, blendAmount);
+        blend(bufSource1, bufSource2, bufOut, NUM_LEDS, blendAmount);
 
-        if(useSource1) {
+        if(useSourceEffect1) {
             if (blendAmount < 255) blendAmount++;
         } else {
             if (blendAmount > 0) blendAmount--;
@@ -115,8 +114,8 @@ void loop() {
     // Serial.print("Current Effect: ");
     // Serial.println(currentPattern);
 
-    runPattern(sourcePattern1, source1);
-    runPattern(sourcePattern2, source2);
+    runEffect(sourceEffect1, bufSource1);
+    runEffect(sourceEffect2, bufSource2);
 
     FastLED.show();
 
@@ -124,19 +123,19 @@ void loop() {
     // Serial.println("End loop");
 }
 
-void nextPattern() {
-  currentPattern = (currentPattern + 1) % NUM_PATTERNS;
+void nextEffect() {
+  currentEffect = (currentEffect + 1) % NUM_PATTERNS;
 
-    if(useSource1) {
-        sourcePattern1 = currentPattern;
+    if(useSourceEffect1) {
+        sourceEffect1 = currentEffect;
     } else {
-        sourcePattern2 = currentPattern;
+        sourceEffect2 = currentEffect;
     }
 
-    useSource1 = !useSource1;
+    useSourceEffect1 = !useSourceEffect1;
 }
 
-void runPattern(uint8_t pattern, CRGB *LEDArray)
+void runEffect(uint8_t pattern, CRGB *LEDArray)
 {
         switch(pattern)
         {
