@@ -21,7 +21,6 @@
  *                        juicyPlum.
  *                      - Rename symbols (compiled, not tested on HW)
  * 
- * 
  * ----------------------------------------------------------------------------|
 */
 
@@ -114,17 +113,12 @@ void loop() {
         }
     }
 
-
-    // Serial.print("Current Effect: ");
-    // Serial.println(currentPattern);
-
     runEffect(sourceEffect1, bufSource1);
     runEffect(sourceEffect2, bufSource2);
 
     FastLED.show();
 
     btn.tick();
-    // Serial.println("End loop");
 }
 
 void nextEffect() {
