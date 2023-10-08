@@ -146,19 +146,19 @@ void runEffect(uint8_t pattern, CRGB *LEDArray)
                 break;
 
             case 2:
-                fireEffect(LEDArray);
+                juicyPlumEffect(LEDArray);
                 break;
 
             case 3:
-                embersEffect(LEDArray);
+                fireEffect(LEDArray);
                 break;
 
             case 4:
-                coalsEffect(LEDArray);
+                embersEffect(LEDArray);
                 break;
 
             case 5:
-                juicyPlumEffect(LEDArray);
+                coalsEffect(LEDArray);
                 break;
         }
 }
