@@ -20,6 +20,7 @@
  *                      - Add effects: fire, embers, coals and
  *                        juicyPlum.
  *                      - Rename symbols (compiled, not tested on HW)
+ * 08 Oct 2023  wkr     - Rename Symbols (Tests passed)
  * 
  * ----------------------------------------------------------------------------|
 */
@@ -35,7 +36,7 @@
 #define NUM_LEDS         5
 
 #define PATTERN_BUTTON_PIN  12
-#define NUM_PATTERNS         6
+#define NUM_PATTERNS         7
 
 
 CRGB    bufSource1[NUM_LEDS];
@@ -84,14 +85,23 @@ DEFINE_GRADIENT_PALETTE(pPlum){
     255, 209, 0, 209,
 };
 
+DEFINE_GRADIENT_PALETTE(pEmerald){
+    0, 20, 200, 0,
+    64, 40, 255, 10,
+    128, 40, 255, 0,
+    192, 70, 200, 20,
+    255, 0, 255, 20,
+};
+
 void nextEffect();
-void runEffect(uint8_t pattern, CRGB *LEDArray);
-void nightLightCool(CRGB *LEDArray);
-void nightLightWarm(CRGB *LEDArray);
-void fireEffect(CRGB *LEDArray);
-void embersEffect(CRGB *LEDArray);
-void coalsEffect(CRGB *LEDArray);
-void juicyPlumEffect(CRGB *LEDArray);
+void runEffect(uint8_t pattern, CRGB *LEDBuffer);
+void nightLightCool(CRGB *LEDBuffer);
+void nightLightWarm(CRGB *LEDBuffer);
+void fireEffect(CRGB *LEDBuffer);
+void embersEffect(CRGB *LEDBuffer);
+void coalsEffect(CRGB *LEDBuffer);
+void juicyPlumEffect(CRGB *LEDBuffer);
+void emeraldEffect(CRGB *LEDBuffer);
 
 void setup() {
     FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(bufOut, NUM_LEDS).setCorrection(TypicalLEDStrip);
@@ -133,53 +143,57 @@ void nextEffect() {
     useSourceEffect1 = !useSourceEffect1;
 }
 
-void runEffect(uint8_t pattern, CRGB *LEDArray)
+void runEffect(uint8_t pattern, CRGB *LEDBuffer)
 {
         switch(pattern)
         {
             case 0:
-                nightLightCool(LEDArray);
+                nightLightCool(LEDBuffer);
                 break;
 
             case 1:
-                nightLightWarm(LEDArray);
+                nightLightWarm(LEDBuffer);
                 break;
 
             case 2:
-                juicyPlumEffect(LEDArray);
+                juicyPlumEffect(LEDBuffer);
                 break;
 
             case 3:
-                fireEffect(LEDArray);
+                emeraldEffect(LEDBuffer);
                 break;
 
             case 4:
-                embersEffect(LEDArray);
+                fireEffect(LEDBuffer);
                 break;
 
             case 5:
-                coalsEffect(LEDArray);
+                embersEffect(LEDBuffer);
+                break;
+
+            case 6:
+                coalsEffect(LEDBuffer);
                 break;
         }
 }
 
-void nightLightCool(CRGB *LEDArray)
+void nightLightCool(CRGB *LEDBuffer)
 {
     CRGBPalette16 ice = pBlueIce;
-    uint8_t brightness = beatsin16(2, 92, 128, 0, 0);
+    uint8_t brightness = beatsin16(1, 64, 92, 0, 0);
 
     for(uint8_t i = NUM_LEDS - 1; i < 0; i--){
-        LEDArray[i] = ColorFromPalette(ice, colourIndex[i]);
+        LEDBuffer[i] = ColorFromPalette(ice, colourIndex[i]);
     }
 
-    fill_palette(LEDArray, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, ice, brightness, LINEARBLEND);
+    fill_palette(LEDBuffer, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, ice, brightness, LINEARBLEND);
 
     EVERY_N_MILLISECONDS(200) {
         paletteIndex++;
     }
 }
 
-void nightLightWarm(CRGB *LEDArray)
+void nightLightWarm(CRGB *LEDBuffer)
 {
     CRGBPalette16 fire = pFire;
     uint8_t brightness1 = beatsin8(1, 64, 92, 0, 0);
@@ -187,17 +201,17 @@ void nightLightWarm(CRGB *LEDArray)
     uint8_t brightness = (brightness1 + brightness2) / 2;
 
     for (uint8_t i = NUM_LEDS -1; i < 0; i--) {
-        LEDArray[i] = ColorFromPalette(fire, colourIndex[i]);
+        LEDBuffer[i] = ColorFromPalette(fire, colourIndex[i]);
     }
 
-    fill_palette(LEDArray, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, fire, brightness, LINEARBLEND);
+    fill_palette(LEDBuffer, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, fire, brightness, LINEARBLEND);
 
     EVERY_N_MILLISECONDS(120) {
         paletteIndex++;
     }
 }
 
-void fireEffect(CRGB *LEDArray)
+void fireEffect(CRGB *LEDBuffer)
 {
     int clock = millis();
 
@@ -205,11 +219,11 @@ void fireEffect(CRGB *LEDArray)
         uint8_t noise = inoise8(0, i * 92 + clock, clock / 3);
         uint8_t math = abs8((i - (NUM_LEDS-1)) * 255 / (NUM_LEDS-1) - 32);
         uint8_t index = qsub8 (noise, math);
-        LEDArray[i] = ColorFromPalette (firePalette, index, 255);
+        LEDBuffer[i] = ColorFromPalette (firePalette, index, 255);
     }
 }
 
-void embersEffect(CRGB *LEDArray)
+void embersEffect(CRGB *LEDBuffer)
 {
     CRGBPalette16 fire  = pFire;
     int clock           = millis();
@@ -222,11 +236,11 @@ void embersEffect(CRGB *LEDArray)
         uint8_t noise = inoise8(0, i * 32 + clock, clock / 2);
         uint8_t math = abs8((i - (NUM_LEDS-1)) * 255 / (NUM_LEDS-1) - 32);
         uint8_t index = qsub8 (noise, math);
-        LEDArray[i] = ColorFromPalette (fire, index, brightness);
+        LEDBuffer[i] = ColorFromPalette (fire, index, brightness);
     }
 }
 
-void coalsEffect(CRGB *LEDArray)
+void coalsEffect(CRGB *LEDBuffer)
 {
     CRGBPalette16 fire  = pFire;
     int clock           = millis();
@@ -239,25 +253,42 @@ void coalsEffect(CRGB *LEDArray)
         uint8_t noise = inoise8(0, i * 32 + clock, clock / 2);
         uint8_t math = abs8((i - (NUM_LEDS-1)) * 255 / (NUM_LEDS-1) - 32);
         uint8_t index = qsub8 (noise, math);
-        LEDArray[i] = ColorFromPalette (fire, index, brightness);
+        LEDBuffer[i] = ColorFromPalette (fire, index, brightness);
     }
 }
 
-void juicyPlumEffect(CRGB *LEDArray)
+void juicyPlumEffect(CRGB *LEDBuffer)
 {
     CRGBPalette16 plum = pPlum;
 
     uint8_t brightness  = beatsin8(6, 64, 72, 0, 0);
 
     for (uint8_t i = NUM_LEDS -1; i < 0; i--) {
-        LEDArray[i] = ColorFromPalette(plum, colourIndex[i]);
+        LEDBuffer[i] = ColorFromPalette(plum, colourIndex[i]);
     }
 
-    fill_palette(LEDArray, NUM_LEDS, 0, 1, plum, brightness, LINEARBLEND);
+    fill_palette(LEDBuffer, NUM_LEDS, 0, 1, plum, brightness, LINEARBLEND);
 
     // EVERY_N_MILLISECONDS(120) {
     //     paletteIndex++;
     // }
     Serial.print("P Index: ");
     Serial.println(paletteIndex);
+}
+
+void emeraldEffect(CRGB *LEDBuffer)
+{
+    CRGBPalette16 emerald = pEmerald;
+
+    uint8_t hue         = beatsin8(2, 128, 156, 0, 0);
+    uint8_t brightness  = beatsin8(2, 92, 128, 0, 0);
+    uint8_t brightness2 = beatsin8(2, 92, 128, 0, 128);
+
+    for (uint8_t i = NUM_LEDS -1; i < 0; i--) {
+        LEDBuffer[i] = ColorFromPalette(emerald, colourIndex[i]);
+    }
+
+    fill_palette(LEDBuffer, NUM_LEDS, 0, 1, emerald, brightness, LINEARBLEND);
+
+    LEDBuffer[2] = CHSV(hue, 255, brightness2);
 }
