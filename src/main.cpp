@@ -10,15 +10,18 @@
  *
  * ----------------------------------------------------------------------------|
  * History
- * 03 Oct 2023  wkr     Project Start.  Scaffolding.
- * 03 Oct 2023  wkr     Library OneButton Added.
- *                      Manages hardware buttons and switches.
- * 07 Oct 2023  wkr     Add HW momentary switch
- *                      Add Effect changer functionality.
- *                      Add Crossfade on effect change functionality.
- *                      Add effects: fire, embers, coals and
- *                      -juicyPlum.
- *                      Rename symbols (compiled, not tested on HW)
+ * 03 Oct 2023  wkr     - Project Start.  Scaffolding.
+ * 03 Oct 2023  wkr     - Library OneButton Added.
+ *                      - Manages hardware buttons and switches.
+ * 
+ * 07 Oct 2023  wkr     - Add HW momentary switch
+ *                      - Add Effect changer functionality.
+ *                      - Add Crossfade on effect change functionality.
+ *                      - Add effects: fire, embers, coals and
+ *                        juicyPlum.
+ *                      - Rename symbols (compiled, not tested on HW)
+ * 
+ * 
  * ----------------------------------------------------------------------------|
 */
 
