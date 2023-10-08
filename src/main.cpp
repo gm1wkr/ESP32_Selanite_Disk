@@ -48,9 +48,9 @@ DEFINE_GRADIENT_PALETTE(pBlueIce){
 DEFINE_GRADIENT_PALETTE(pFire){
     0, 230, 60, 0,
     16, 255, 0, 0,
-    48, 255, 70, 0,
+    48, 255, 70, 96,
     76, 255, 180, 0,
-    128, 255, 60, 0,
+    128, 255, 60, 96,
     196, 122, 0, 0,
     220, 186, 64 , 0,
     255, 255, 20, 0,
@@ -106,7 +106,9 @@ void nightLightCool()
 void nightLightFire()
 {
     CRGBPalette16 fire = pFire;
-    uint8_t brightness = beatsin8(1, 64, 92, 0, 0);
+    uint8_t brightness1 = beatsin8(1, 64, 92, 0, 0);
+    uint8_t brightness2 = beatsin8(4, 32, 128, 0, 128);
+    uint8_t brightness = (brightness1 + brightness2) / 2;
 
     for (uint8_t i = NUM_LEDS -1; i < 0; i--) {
         leds[i] = ColorFromPalette(fire, colourIndex[i]);
