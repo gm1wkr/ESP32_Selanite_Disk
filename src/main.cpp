@@ -280,7 +280,7 @@ void emeraldEffect(CRGB *LEDBuffer)
 {
     CRGBPalette16 emerald = pEmerald;
 
-    uint8_t hue         = beatsin8(2, 128, 156, 0, 0);
+    uint8_t hue         = beatsin8(2, 128, 196, 0, 0);
     uint8_t brightness  = beatsin8(2, 92, 128, 0, 0);
     uint8_t brightness2 = beatsin8(2, 92, 128, 0, 128);
 
