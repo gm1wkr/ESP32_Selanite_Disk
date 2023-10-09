@@ -127,7 +127,6 @@ void loop() {
     runEffect(sourceEffect2, bufSource2);
 
     FastLED.show();
-
     btn.tick();
 }
 
