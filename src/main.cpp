@@ -308,7 +308,6 @@ void coolMoonEffect(CRGB *LEDBuffer)
 {
     CRGBPalette16 moon = pMoon;
 
-    uint8_t hue             = beatsin8(2, 128, 196, 0, 0);
     uint8_t brightness1     = beatsin8(1, 48, 92, 0, 0);
     uint8_t brightness2     = beatsin8(3, 32, 64, 0, 96);
     uint8_t brightness      = (brightness1 + brightness2) / 2;
@@ -320,9 +319,7 @@ void coolMoonEffect(CRGB *LEDBuffer)
 
     fill_palette(LEDBuffer, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, moon, brightness, LINEARBLEND);
 
-    EVERY_N_MILLISECONDS(40) {
+    EVERY_N_MILLISECONDS(240) {
         paletteIndex++;
     }
-
-    // LEDBuffer[2] = CHSV(hue, 255, brightness2);
 }
