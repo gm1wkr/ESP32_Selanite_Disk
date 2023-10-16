@@ -68,7 +68,7 @@ DEFINE_GRADIENT_PALETTE(pBlueIce){
 DEFINE_GRADIENT_PALETTE(pFire){
     0, 255, 64, 0,
     96, 255, 32, 0,
-    128, 255, 0, 0,
+    128, 255, 92, 0,
     192, 255, 60, 0,
     255, 255, 16, 0 ,
 
