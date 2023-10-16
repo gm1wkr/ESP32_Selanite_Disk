@@ -19,8 +19,9 @@
  *                      - Add Crossfade on effect change functionality.
  *                      - Add effects: fire, embers, coals and
  *                        juicyPlum.
- *                      - Rename symbols (compiled, not tested on HW)
- * 08 Oct 2023  wkr     - Rename Symbols (Tests passed)
+ *                      - Rename symbols (compiled, not tested on HW).
+ * 08 Oct 2023  wkr     - Rename Symbols (Tests passed).
+ * 16-Oct-2023  wkr     - Adjust fire palette.
  * 
  * ----------------------------------------------------------------------------|
 */
