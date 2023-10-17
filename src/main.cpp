@@ -19,8 +19,9 @@
  *                      - Add Crossfade on effect change functionality.
  *                      - Add effects: fire, embers, coals and
  *                        juicyPlum.
- *                      - Rename symbols (compiled, not tested on HW)
- * 08 Oct 2023  wkr     - Rename Symbols (Tests passed)
+ *                      - Rename symbols (compiled, not tested on HW).
+ * 08 Oct 2023  wkr     - Rename Symbols (Tests passed).
+ * 16-Oct-2023  wkr     - Adjust fire palette.
  * 
  * ----------------------------------------------------------------------------|
 */
@@ -36,7 +37,7 @@
 #define NUM_LEDS         5
 
 #define PATTERN_BUTTON_PIN  12
-#define NUM_PATTERNS         7
+#define NUM_PATTERNS         8
 
 
 CRGB    bufSource1[NUM_LEDS];
@@ -66,14 +67,12 @@ DEFINE_GRADIENT_PALETTE(pBlueIce){
 };
 
 DEFINE_GRADIENT_PALETTE(pFire){
-    0, 230, 60, 0,
-    16, 255, 0, 0,
-    48, 255, 70, 96,
-    76, 255, 180, 0,
-    128, 255, 60, 96,
-    196, 122, 0, 0,
-    220, 186, 64 , 0,
-    255, 255, 20, 0,
+    0, 255, 64, 0,
+    96, 255, 32, 0,
+    128, 255, 92, 0,
+    192, 255, 60, 0,
+    255, 255, 16, 0 ,
+
 };
 
 DEFINE_GRADIENT_PALETTE(pPlum){
@@ -93,6 +92,14 @@ DEFINE_GRADIENT_PALETTE(pEmerald){
     255, 0, 255, 20,
 };
 
+DEFINE_GRADIENT_PALETTE(pMoon){
+    0, 222, 244, 252,
+    128, 240, 251, 255,
+    128, 255, 255, 255,
+    192, 220, 220, 245,
+    255, 216, 241, 255,
+};
+
 void nextEffect();
 void runEffect(uint8_t pattern, CRGB *LEDBuffer);
 void nightLightCool(CRGB *LEDBuffer);
@@ -102,6 +109,7 @@ void embersEffect(CRGB *LEDBuffer);
 void coalsEffect(CRGB *LEDBuffer);
 void juicyPlumEffect(CRGB *LEDBuffer);
 void emeraldEffect(CRGB *LEDBuffer);
+void coolMoonEffect(CRGB *LEDBuffer);
 
 void setup() {
     FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(bufOut, NUM_LEDS).setCorrection(TypicalLEDStrip);
@@ -127,7 +135,6 @@ void loop() {
     runEffect(sourceEffect2, bufSource2);
 
     FastLED.show();
-
     btn.tick();
 }
 
@@ -152,26 +159,30 @@ void runEffect(uint8_t pattern, CRGB *LEDBuffer)
                 break;
 
             case 1:
-                nightLightWarm(LEDBuffer);
+                coolMoonEffect(LEDBuffer);
                 break;
 
             case 2:
-                juicyPlumEffect(LEDBuffer);
+                nightLightWarm(LEDBuffer);
                 break;
 
             case 3:
-                emeraldEffect(LEDBuffer);
+                juicyPlumEffect(LEDBuffer);
                 break;
 
             case 4:
-                fireEffect(LEDBuffer);
+                emeraldEffect(LEDBuffer);
                 break;
 
             case 5:
-                embersEffect(LEDBuffer);
+                fireEffect(LEDBuffer);
                 break;
 
             case 6:
+                embersEffect(LEDBuffer);
+                break;
+
+            case 7:
                 coalsEffect(LEDBuffer);
                 break;
         }
@@ -206,7 +217,7 @@ void nightLightWarm(CRGB *LEDBuffer)
 
     fill_palette(LEDBuffer, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, fire, brightness, LINEARBLEND);
 
-    EVERY_N_MILLISECONDS(120) {
+    EVERY_N_MILLISECONDS(280) {
         paletteIndex++;
     }
 }
@@ -269,11 +280,10 @@ void juicyPlumEffect(CRGB *LEDBuffer)
 
     fill_palette(LEDBuffer, NUM_LEDS, 0, 1, plum, brightness, LINEARBLEND);
 
-    // EVERY_N_MILLISECONDS(120) {
-    //     paletteIndex++;
-    // }
-    Serial.print("P Index: ");
-    Serial.println(paletteIndex);
+    EVERY_N_MILLISECONDS(120) {
+        paletteIndex++;
+    }
+
 }
 
 void emeraldEffect(CRGB *LEDBuffer)
@@ -291,4 +301,24 @@ void emeraldEffect(CRGB *LEDBuffer)
     fill_palette(LEDBuffer, NUM_LEDS, 0, 1, emerald, brightness, LINEARBLEND);
 
     LEDBuffer[2] = CHSV(hue, 255, brightness2);
+}
+
+void coolMoonEffect(CRGB *LEDBuffer) 
+{
+    CRGBPalette16 moon = pMoon;
+
+    uint8_t brightness1     = beatsin8(1, 48, 92, 0, 0);
+    uint8_t brightness2     = beatsin8(3, 32, 64, 0, 96);
+    uint8_t brightness      = (brightness1 + brightness2) / 2;
+
+    
+    for (uint8_t i = NUM_LEDS -1; i < 0; i--) {
+        LEDBuffer[i] = ColorFromPalette(moon, colourIndex[i]);
+    }
+
+    fill_palette(LEDBuffer, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, moon, brightness, LINEARBLEND);
+
+    EVERY_N_MILLISECONDS(240) {
+        paletteIndex++;
+    }
 }
